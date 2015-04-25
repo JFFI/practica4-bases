@@ -269,6 +269,100 @@ io.on('connection', function(socket){
     });
     client.end();
   });
+  socket.on('ares',function(data){
+    var now = new Date();
+    var totcost = 0;
+    var contador = 0;
+    var whoareyou="";
+    var client = new Client();
+    client.connect({
+      host: '127.0.0.1'
+      ,user: 'root'
+      ,password: 'julio123'
+      ,db: 'julio'
+    });
+    
+    client.query('SELECT COUNT(*) AS NUM FROM RESERVACION').on
+    ('result',function(result){
+      result.on(
+	'row',function(row){
+	  contador = parseInt(row.NUM);
+	  console.log(row.NUM);
+	}
+      ).on
+      ('error',function(err) { 
+	console.log('Resultor: ' + inspect(err)); 
+      }).on
+      ('end',function(info) { 
+	console.log('Resultished successfully'); 
+	client.query('SELECT * FROM PARTE WHERE RUTA = '+data['ruta'] +' AND PUNTO = '+data['destino']).on
+	('result',function(result){
+	  result.on(
+	    'row',function(row){
+	      totcost = parseInt(row.DISTANCIA);
+	    }
+	  ).on
+	  ('error',function(err) { 
+	    console.log('Resultor: ' + inspect(err)); 
+	  }).on
+	  ('end',function(info) { 
+	    console.log('Resultished successfully'); 
+	    client.query('SELECT * FROM PARTE WHERE RUTA = '+data['ruta'] +' AND PUNTO = '+data['origen']).on
+	    ('result',function(result){
+	      result.on(
+		'row',function(row){
+		  totcost = totcost - parseInt(row.DISTANCIA);
+		  if(totcost < 0){
+		    totcost = totcost * -1;
+		  }
+		  totcost = totcost * 100;
+		  console.log(totcost);
+		}
+	      ).on
+	      ('error',function(err) { 
+		console.log('Resultor: ' + inspect(err)); 
+	      }).on
+	      ('end',function(info) { 
+		console.log('Resultished successfully'); 
+		client.query('INSERT INTO RESERVACION VALUES ('+contador+',\''+now.getFullYear() +'/' + (parseInt(now.getMonth())+1) + '/' + now.getDate() +'\',0,'+totcost + ','+data['ruta']+','+ data['origen'] +','+data['destino']+','+data['cliente']+')').on
+		console.log('INSERT INTO RESERVACION VALUES ('+contador+',\''+now.getFullYear() +'/' + (parseInt(now.getMonth())+1) + '/' + now.getDate() +'\',0,'+totcost + ','+data['ruta']+','+ data['origen'] +','+data['destino']+','+whoareyou+')');
+		('result',function(result){
+		  result.on
+		  ('error',function(err) { 
+		    console.log('Resultor: ' + inspect(err)); 
+		  }).on
+		  ('end',function(info) { 
+		    console.log('Resultished successfully'); 
+		  });
+		});
+	      }); 
+	    });
+	  }); 
+	});
+      });
+    });
+    client.end();
+  });
+  socket.on('cres',function(data){
+    var client = new Client();
+    client.connect({
+      host: '127.0.0.1'
+      ,user: 'root'
+      ,password: 'julio123'
+      ,db: 'julio'
+    });
+    client.query('UPDATE RESERVACION SET PAGADA = 1 WHERE RESERVACION ='+data['res']).on
+    ('result',function(result){
+      result.on
+      ('error',function(err) { 
+	console.log('Resultor: ' + inspect(err)); 
+      }).on
+      ('end',function(info) { 
+	console.log('Resultished successfully'); 
+      });
+    });
+    client.end();
+  });
   socket.on('mbus',function(data){
     var client = new Client();
     client.connect({
@@ -291,6 +385,32 @@ io.on('connection', function(socket){
       ('end',function(info) { 
 	console.log('Resultished successfully');
 	socket.emit('rmbus', {'todo':cadenita});
+      });
+    });
+    client.end();
+  });
+  socket.on('mparte',function(data){
+    var client = new Client();
+    client.connect({
+      host: '127.0.0.1'
+      ,user: 'root'
+      ,password: 'julio123'
+      ,db: 'julio'
+    });
+    client.query('SELECT * FROM (PARTE NATURAL JOIN PUNTO)').on
+    ('result',function(result){
+      var cadenita = "";
+      result.on(
+	'row',function(row){
+	  cadenita = cadenita + row.RUTA + ' ' + row.NOMBRE + ' ' + row.DISTANCIA +' <br>'; 
+	}
+      ).on
+      ('error',function(err) { 
+	console.log('Resultor: ' + inspect(err)); 
+      }).on
+      ('end',function(info) { 
+	console.log('Resultished successfully');
+	socket.emit('rmparte', {'todo':cadenita});
       });
     });
     client.end();
@@ -335,6 +455,32 @@ io.on('connection', function(socket){
       result.on(
 	'row',function(row){
 	  cadenita = cadenita + row.RUTA + ' ' + row.BUS + ' '+ row.FECHA + ' <br>'; 
+	}
+      ).on
+      ('error',function(err) { 
+	console.log('Resultor: ' + inspect(err)); 
+      }).on
+      ('end',function(info) { 
+	console.log('Resultished successfully');
+	socket.emit('rmasig', {'todo':cadenita});
+      });
+    });
+    client.end();
+  });
+  socket.on('mres',function(data){
+    var client = new Client();
+    client.connect({
+      host: '127.0.0.1'
+      ,user: 'root'
+      ,password: 'julio123'
+      ,db: 'julio'
+    });
+    client.query('SELECT RESERVACION, RUTA,CLIENTE, FECHA,PAGADA,TOTAL FROM RESERVACION').on
+    ('result',function(result){
+      var cadenita = "";
+      result.on(
+	'row',function(row){
+	  cadenita = cadenita + row.RESERVACION + ' ' + row.RUTA + ' '+ row.CLIENTE + row.FECHA + ' 'row.PAGADA + ' 'row.TOTAL + ' <br>'; 
 	}
       ).on
       ('error',function(err) { 

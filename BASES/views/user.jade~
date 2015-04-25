@@ -1,0 +1,26 @@
+extend layout
+block encabezado
+  script(type="text/javascript",src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js").
+  script(type="text/javascript",src="/javascripts/user.js").
+  script(src="/socket.io/socket.io.js").
+block content
+  div
+    h1 Reservar Boleto
+    form(id = "ares")
+      input(id="aresruta",value = "No.Ruta")
+      input(id ="aresori",value = "No.Punto Origen")
+      input(id = "aresdes", value = "No.Punto Destino")
+      input(id = "arescli", value = "No. DPI")
+      br
+      input(type = "submit", value = "Reservar")
+    h1 Pago
+    form(id = "cres")
+      input(id ="cresres",value = "Reservacion a pagar")
+      br
+      input(type = "submit",value = "Pagar")
+block sidebar
+  .widget
+    h1 Usuario
+    form(id = "mparte")
+      input(type = "submit", value = "Mostrar Rutas")
+    div(id="node-id")
