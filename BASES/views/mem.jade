@@ -1,0 +1,13 @@
+extend layout
+block encabezado
+  script(type="text/javascript",src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js").
+  script(type="text/javascript",src="/javascripts/mem.js").
+  script(src="/socket.io/socket.io.js").
+block content
+  script(type = "text/javascript",src="/js/highcharts.js").
+  script(type = "text/javascript",src="/js/modules/exporting.js").
+  div(id="container",style="min-width: 310px; height: 400px; margin: 0 auto")
+block sidebar
+  .widget
+    h1 RAM
+    div(id="node-id")
