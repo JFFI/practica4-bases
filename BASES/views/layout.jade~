@@ -1,7 +1,18 @@
-doctype html
+doctype
 html
   head
     title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
+    //link(rel='stylesheet', href='/stylesheets/style.css')
+    block encabezado
+      
   body
-    block content
+    header
+      h1 #{title}
+    .container
+      .main-content
+        block content
+      .sidebar
+        block sidebar
+    footer
+      div(style="clear:both;text-align:center;")
+        p Creado por Julio :)

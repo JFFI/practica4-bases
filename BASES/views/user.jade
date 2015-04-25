@@ -1,0 +1,13 @@
+extend layout
+block encabezado
+  script(type="text/javascript",src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js").
+  script(type="text/javascript",src="/javascripts/admin.js").
+  script(src="/socket.io/socket.io.js").
+block content
+  div(id="container",style="min-width: 310px; height: 400px; margin: 0 auto")
+block sidebar
+  .widget
+    h1 Admin
+    div(id="node-id")
+    script.       
+      var node = document.getElementById('node-id');

@@ -1,5 +1,18 @@
-extends layout
-
+extend layout
+block encabezado
+  script(type="text/javascript",src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js").
+  script(type="text/javascript",src="/javascripts/login.js").
+  script(src="/socket.io/socket.io.js").
 block content
-  h1= title
-  p Welcome to #{title}
+  form(action="/user",method = "POST",id="myForm")
+    h1 Login
+    input(value="dpi",name = "dpi")
+    input(type="submit",value = "Login")
+block sidebar
+  .widget
+    form(id="myForm2")
+      h1 Registrarse
+      input(value = "dpi")
+      input(value = "nombre")
+      input(value = "telefono")
+      input(type = "submit",value="Registrarse")

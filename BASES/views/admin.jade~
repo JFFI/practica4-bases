@@ -1,0 +1,28 @@
+extend layout
+block encabezado
+  script(type="text/javascript",src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js").
+  script(type="text/javascript",src="/javascripts/admin.js").
+  script(src="/socket.io/socket.io.js").
+block content
+  div
+    h1 Agregar Bus
+    form(id = "abus")
+      input(name="abusbus",value = "No.Bus")
+      select(name = "abustipo")
+        option(value = 1) Economico
+        option(value = 2) Empresarial
+      input(type="submit",value = "Agregar")
+    h1 Borrar Bus
+    form(id="bbus")
+      input(name="bbusbus",value = "No.Bus")
+      input(type="submit",value = "Borrar")
+    h1 Cambiar Bus
+    form(id="cbus")
+      input(name="cbusbus",value = "No.Bus")
+      select(name = "cbustipo")
+        option(value = 1) Economico
+        option(value = 2) Empresarial
+      input(type="submit",value = "Cambiar")
+block sidebar
+  .widget
+    h1 Admin

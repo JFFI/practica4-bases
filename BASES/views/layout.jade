@@ -7,24 +7,12 @@ html
       
   body
     header
-      h1 Manejador de #{title}
+      h1 #{title}
     .container
-      form(id="myForm")
-        .main-content
-          block content
-        .sidebar
-          block sidebar
+      .main-content
+        block content
+      .sidebar
+        block sidebar
     footer
-      div(class="estorbo")
-        p
-      div(style="float:left;width:40%;")
-        form(action="/",method="GET",style="float:left;width:33%;text-align:center;")
-          input(type="submit",value="Procesos",style="width:100px")
-        form(action="/proc",method="GET",style="float:left;width:34%;text-align:center;")
-          input(type="submit",value="CPU",style="width:100px")
-        form(action="/mem",method="GET",style="float:left;width:33%;text-align:center;")
-          input(type="submit",value="Memoria",style="width:100px")
-      div(class="estorbo")
-        p
       div(style="clear:both;text-align:center;")
         p Creado por Julio :)

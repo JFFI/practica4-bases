@@ -37,25 +37,67 @@ app.configure('production', function(){
 // Routes
 
 app.get('/', function(req, res){
-  res.render('index', { title: 'Login' })
+  res.render('index', { title: 'Bienvenido' })
 });
 app.get('/admin', function(req,res){
-  res.render('admin',{title:'Admin'});
+  res.render('admin',{title:'Administrador'});
 });
 app.get('/user', function(req,res){
   res.render('user',{title:'Usuario'});
-});
-app.get('/proc', function(req,res){
-  res.render('proc',{title:'P'});
 });
 
 app.listen(3000, function(){
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 });
-
-
+app.use(express.bodyParser());
+app.post('/user',function(req,res){
+  if(req.body.user.dpi == 'admin'){
+    res.render('admin',{title:'Administrador'});
+  }else{
+    var client = new Client();
+    var funciono = 0;
+    client.connect
+    (
+      {
+	host: '127.0.0.1'
+	,user: 'root'
+	,password: 'julio123'
+	,db: 'julio'
+      }
+    );
+    client.query('SELECT * FROM CLIENTE WHERE DPI = '+req.body.user.dpi).on
+    (
+      'result', 
+     function(result) 
+     {
+       result.on
+       (
+	 'row', 
+	function(row) { 
+	    res.render('user',{title:row.NOMBRE});
+	    funciono = 1;
+	  } 
+       ).on
+       (
+	 'error', 
+	function(err) { console.log('Resultor: ' + inspect(err)); 
+    }
+       ).on
+       (
+	 'end', 
+	function(info) { console.log('Resultished successfully'); }
+       );
+     }
+    ).on
+    (
+      'end', 
+     function() { console.log('Doneh all results'); }
+    );
+    client.end();
+  }
+});
 io.on('connection', function(socket){
-  socket.on('kill', function(data){
+  socket.on('login', function(data){
     /*console.log('asesinando: ' + data['pid']);
      *    require('shelljs/global');
      *    exec('kill '+data['pid']);*/
@@ -66,6 +108,7 @@ io.on('connection', function(socket){
 	host: '127.0.0.1'
 	,user: 'root'
 	,password: 'julio123'
+	,db: 'julio'
       }
     );
     client.on('connect', function() { console.log('Clientnected'); } 
@@ -75,8 +118,52 @@ io.on('connection', function(socket){
     (
       'close', function(hadError) { console.log('Clientsed'); }
     );
+    client.query('SELECT * FROM CLIENTE WHERE DPI = '+data['dpi']).on
+    (
+      'result', 
+     function(result) 
+     {
+       result.on
+       (
+	 'row', 
+	function(row) { console.log('Result: ' + inspect(row)); }
+       ).on
+       (
+	 'error', 
+	function(err) { console.log('SELECT * FROM CLIENTE WHERE DPI = '+data['dpi']);console.log('Resultor: ' + inspect(err)); }
+       ).on
+       (
+	 'end', 
+	function(info) { console.log('Resultished successfully'); }
+       );
+     }
+    ).on
+    (
+      'end', 
+     function() { console.log('Doneh all results'); }
+    );
     
-    client.query('SHOW DATABASES').on
+    client.end();
+  });
+  socket.on('register',function(data){
+    var client = new Client();
+    client.connect
+    (
+      {
+	host: '127.0.0.1'
+	,user: 'root'
+	,password: 'julio123'
+	,db: 'julio'
+      }
+    );
+    client.on('connect', function() { console.log('Clientnected'); } 
+    ).on(
+      'error', function(err) { console.log('Clientor: ' + err); }
+    ).on
+    (
+      'close', function(hadError) { console.log('Clientsed'); }
+    );
+    client.query('SELECT * FROM CLIENTE WHERE DPI = 2013202').on
     (
       'result', 
      function(result) 
@@ -103,9 +190,38 @@ io.on('connection', function(socket){
     
     client.end();
   });
+  socket.on('abus',function(data){
+    var client = new Client();
+    client.connect
+    (
+      {
+	host: '127.0.0.1'
+	,user: 'root'
+	,password: 'julio123'
+	,db: 'julio'
+      }
+    );
+    client.query('INSERT INTO BUS VALUES('+data['bus'] + ','+data['tipo']+')').on
+    (
+      'result', 
+     function(result) 
+     {
+       result.on
+       (
+	 'error', 
+	function(err) { console.log('Resultor: ' + inspect(err)); }
+       ).on
+       (
+	 'end', 
+	function(info) { console.log('Resultished successfully'); }
+       );
+     }
+    );
+    client.end();
+  });
 });
 
-setInterval(function(){
+/*setInterval(function(){
 var fs = require('fs');
 var numeros = fs.readFileSync("/proc/meminfo","UTF-8");
 
@@ -198,4 +314,4 @@ io.emit('cpulog',{'uso':cpulog});
 io.emit('listapr',{'lista':listaproc,'totproc':totproc,'rproc':rproc,'sproc':sproc,'zproc':zproc,'dproc':dproc});
 
 },1500);
-
+*/
