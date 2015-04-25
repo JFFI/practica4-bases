@@ -475,12 +475,29 @@ io.on('connection', function(socket){
       ,password: 'julio123'
       ,db: 'julio'
     });
-    client.query('SELECT RESERVACION, RUTA,CLIENTE, FECHA,PAGADA,TOTAL FROM RESERVACION').on
+    client.query('SELECT * FROM RESERVACION WHERE CLIENTE = '+data['cliente']).on
     ('result',function(result){
       var cadenita = "";
       result.on(
 	'row',function(row){
-	  cadenita = cadenita + row.RESERVACION + ' ' + row.RUTA + ' '+ row.CLIENTE + row.FECHA + ' 'row.PAGADA + ' 'row.TOTAL + ' <br>'; 
+	  cadenita = cadenita + row.RESERVACION + ' ' + row.RUTA + ' '+ row.CLIENTE + ' '+row.FECHA + ' '+row.PAGADA + ' '+row.TOTAL + ' <br>'; 
+	 
+	  client.query('SELECT * FROM PARTE WHERE RUTA = '+ row.RUTA).on
+	  ('result',function(result){
+	     var mini = "";
+	    result.on(
+	      'row',function(row){
+		mini = mini + row.DISTANCIA + ' <br>'; 
+	      }
+	    ).on
+	    ('error',function(err) { 
+	      console.log('Resultor: ' + inspect(err)); 
+	    }).on
+	    ('end',function(info) { 
+	      console.log('Resultished successfully');
+	      cadenita = cadenita + mini + '<br>';
+	    });
+	  });
 	}
       ).on
       ('error',function(err) { 
@@ -488,7 +505,7 @@ io.on('connection', function(socket){
       }).on
       ('end',function(info) { 
 	console.log('Resultished successfully');
-	socket.emit('rmasig', {'todo':cadenita});
+	socket.emit('rmres', {'todo':cadenita});
       });
     });
     client.end();

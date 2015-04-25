@@ -26,7 +26,7 @@ $(function () {
         node.innerHTML = data['todo'];
       });
       socket.on('rmres',function(data){
-	var node = document.getElementById('node-id2');
+	var node = document.getElementById('node-id');
         node.innerHTML = data['todo'];
       });
     });
