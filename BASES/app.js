@@ -97,126 +97,254 @@ app.post('/user',function(req,res){
   }
 });
 io.on('connection', function(socket){
-  socket.on('login', function(data){
-    /*console.log('asesinando: ' + data['pid']);
-     *    require('shelljs/global');
-     *    exec('kill '+data['pid']);*/
-    var client = new Client();
-    client.connect
-    (
-      {
-	host: '127.0.0.1'
-	,user: 'root'
-	,password: 'julio123'
-	,db: 'julio'
-      }
-    );
-    client.on('connect', function() { console.log('Clientnected'); } 
-    ).on(
-      'error', function(err) { console.log('Clientor: ' + err); }
-    ).on
-    (
-      'close', function(hadError) { console.log('Clientsed'); }
-    );
-    client.query('SELECT * FROM CLIENTE WHERE DPI = '+data['dpi']).on
-    (
-      'result', 
-     function(result) 
-     {
-       result.on
-       (
-	 'row', 
-	function(row) { console.log('Result: ' + inspect(row)); }
-       ).on
-       (
-	 'error', 
-	function(err) { console.log('SELECT * FROM CLIENTE WHERE DPI = '+data['dpi']);console.log('Resultor: ' + inspect(err)); }
-       ).on
-       (
-	 'end', 
-	function(info) { console.log('Resultished successfully'); }
-       );
-     }
-    ).on
-    (
-      'end', 
-     function() { console.log('Doneh all results'); }
-    );
-    
-    client.end();
-  });
   socket.on('register',function(data){
     var client = new Client();
-    client.connect
-    (
-      {
-	host: '127.0.0.1'
-	,user: 'root'
-	,password: 'julio123'
-	,db: 'julio'
-      }
-    );
-    client.on('connect', function() { console.log('Clientnected'); } 
-    ).on(
-      'error', function(err) { console.log('Clientor: ' + err); }
-    ).on
-    (
-      'close', function(hadError) { console.log('Clientsed'); }
-    );
-    client.query('SELECT * FROM CLIENTE WHERE DPI = 2013202').on
-    (
-      'result', 
-     function(result) 
-     {
-       result.on
-       (
-	 'row', 
-	function(row) { console.log('Result: ' + inspect(row)); }
-       ).on
-       (
-	 'error', 
-	function(err) { console.log('Resultor: ' + inspect(err)); }
-       ).on
-       (
-	 'end', 
-	function(info) { console.log('Resultished successfully'); }
-       );
-     }
-    ).on
-    (
-      'end', 
-     function() { console.log('Doneh all results'); }
-    );
-    
+    client.connect({
+      host: '127.0.0.1'
+      ,user: 'root'
+      ,password: 'julio123'
+      ,db: 'julio'
+    });
+    client.query('INSERT INTO CLIENTE VALUES('+data['dpi'] + ','+data['nombre']+','+data['tel']+')').on
+    ('result',function(result){
+      result.on
+      ('error',function(err) { 
+	console.log('Resultor: ' + inspect(err)); 
+      }).on
+      ('end',function(info) { 
+	console.log('Resultished successfully'); 
+      });
+    });
     client.end();
   });
   socket.on('abus',function(data){
     var client = new Client();
-    client.connect
-    (
-      {
-	host: '127.0.0.1'
-	,user: 'root'
-	,password: 'julio123'
-	,db: 'julio'
-      }
-    );
+    client.connect({
+      host: '127.0.0.1'
+      ,user: 'root'
+      ,password: 'julio123'
+      ,db: 'julio'
+    });
     client.query('INSERT INTO BUS VALUES('+data['bus'] + ','+data['tipo']+')').on
-    (
-      'result', 
-     function(result) 
-     {
-       result.on
-       (
-	 'error', 
-	function(err) { console.log('Resultor: ' + inspect(err)); }
-       ).on
-       (
-	 'end', 
-	function(info) { console.log('Resultished successfully'); }
-       );
-     }
-    );
+    ('result',function(result){
+      result.on
+      ('error',function(err) { 
+	console.log('Resultor: ' + inspect(err)); 
+      }).on
+      ('end',function(info) { 
+	console.log('Resultished successfully'); 
+      });
+    });
+    client.end();
+  });
+  socket.on('bbus',function(data){
+    var client = new Client();
+    client.connect({
+      host: '127.0.0.1'
+      ,user: 'root'
+      ,password: 'julio123'
+      ,db: 'julio'
+    });
+    client.query('DELETE FROM BUS WHERE BUS ='+data['bus']).on
+    ('result',function(result){
+      result.on
+      ('error',function(err) { 
+	console.log('Resultor: ' + inspect(err)); 
+      }).on
+      ('end',function(info) { 
+	console.log('Resultished successfully'); 
+      });
+    });
+    client.end();
+  });
+  socket.on('cbus',function(data){
+    var client = new Client();
+    client.connect({
+      host: '127.0.0.1'
+      ,user: 'root'
+      ,password: 'julio123'
+      ,db: 'julio'
+    });
+    client.query('UPDATE BUS SET TIPO_BUS = '+data['tipo']+' WHERE BUS ='+data['bus']).on
+    ('result',function(result){
+      result.on
+      ('error',function(err) { 
+	console.log('Resultor: ' + inspect(err)); 
+      }).on
+      ('end',function(info) { 
+	console.log('Resultished successfully'); 
+      });
+    });
+    client.end();
+  });
+  socket.on('aruta',function(data){
+    var client = new Client();
+    client.connect({
+      host: '127.0.0.1'
+      ,user: 'root'
+      ,password: 'julio123'
+      ,db: 'julio'
+    });
+    client.query('INSERT INTO RUTA VALUES('+data['ruta']+','+data['nombre']+')').on
+    ('result',function(result){
+      result.on
+      ('error',function(err) { 
+	console.log('Resultor: ' + inspect(err)); 
+      }).on
+      ('end',function(info) { 
+	console.log('Resultished successfully'); 
+      });
+    });
+    client.end();
+  });
+  socket.on('bruta',function(data){
+    var client = new Client();
+    client.connect({
+      host: '127.0.0.1'
+      ,user: 'root'
+      ,password: 'julio123'
+      ,db: 'julio'
+    });
+    client.query('DELETE FROM PARTE WHERE RUTA = '+data['ruta']).on
+    ('result',function(result){
+      result.on
+      ('error',function(err) { 
+	console.log('Resultor: ' + inspect(err)); 
+      }).on
+      ('end',function(info) { 
+	console.log('Resultished successfully'); 
+      });
+    });
+    client.query('DELETE FROM RUTA WHERE RUTA = '+data['ruta']).on
+    ('result',function(result){
+      result.on
+      ('error',function(err) { 
+	console.log('Resultor: ' + inspect(err)); 
+      }).on
+      ('end',function(info) { 
+	console.log('Resultished successfully'); 
+      });
+    });
+    client.end();
+  });
+  socket.on('cruta',function(data){
+    var client = new Client();
+    client.connect({
+      host: '127.0.0.1'
+      ,user: 'root'
+      ,password: 'julio123'
+      ,db: 'julio'
+    });
+    client.query('INSERT INTO PARTE VALUES ('+data['ruta']+','+data['punto']+','+data['dist']+')').on
+    ('result',function(result){
+      result.on
+      ('error',function(err) { 
+	console.log('Resultor: ' + inspect(err)); 
+      }).on
+      ('end',function(info) { 
+	console.log('Resultished successfully'); 
+      });
+    });
+    client.end();
+  });
+  socket.on('aasig',function(data){
+    var now = new Date();
+    var client = new Client();
+    client.connect({
+      host: '127.0.0.1'
+      ,user: 'root'
+      ,password: 'julio123'
+      ,db: 'julio'
+    });
+    client.query('INSERT INTO ASIGNACION VALUES ('+data['bus']+',\''+now.getFullYear() +'/' + (parseInt(now.getMonth())+1) + '/' + now.getDate() +'\','+data['ruta']+')').on
+    console.log(now);
+    ('result',function(result){
+      result.on
+      ('error',function(err) { 
+	console.log('Resultor: ' + inspect(err)); 
+      }).on
+      ('end',function(info) { 
+	console.log('Resultished successfully'); 
+      });
+    });
+    client.end();
+  });
+  socket.on('mbus',function(data){
+    var client = new Client();
+    client.connect({
+      host: '127.0.0.1'
+      ,user: 'root'
+      ,password: 'julio123'
+      ,db: 'julio'
+    });
+    client.query('SELECT * FROM (BUS NATURAL JOIN TIPO_BUS)').on
+    ('result',function(result){
+      var cadenita = "";
+      result.on(
+	'row',function(row){
+	  cadenita = cadenita + row.BUS + ' ' + row.NOMBRE + ' <br>'; 
+	}
+      ).on
+      ('error',function(err) { 
+	console.log('Resultor: ' + inspect(err)); 
+      }).on
+      ('end',function(info) { 
+	console.log('Resultished successfully');
+	socket.emit('rmbus', {'todo':cadenita});
+      });
+    });
+    client.end();
+  });
+  socket.on('mruta',function(data){
+    var client = new Client();
+    client.connect({
+      host: '127.0.0.1'
+      ,user: 'root'
+      ,password: 'julio123'
+      ,db: 'julio'
+    });
+    client.query('SELECT * FROM RUTA').on
+    ('result',function(result){
+      var cadenita = "";
+      result.on(
+	'row',function(row){
+	  cadenita = cadenita + row.RUTA + ' ' + row.NOMBRE + ' <br>'; 
+	}
+      ).on
+      ('error',function(err) { 
+	console.log('Resultor: ' + inspect(err)); 
+      }).on
+      ('end',function(info) { 
+	console.log('Resultished successfully');
+	socket.emit('rmruta', {'todo':cadenita});
+      });
+    });
+    client.end();
+  });
+  socket.on('masig',function(data){
+    var client = new Client();
+    client.connect({
+      host: '127.0.0.1'
+      ,user: 'root'
+      ,password: 'julio123'
+      ,db: 'julio'
+    });
+    client.query('SELECT * FROM ASIGNACION').on
+    ('result',function(result){
+      var cadenita = "";
+      result.on(
+	'row',function(row){
+	  cadenita = cadenita + row.RUTA + ' ' + row.BUS + ' '+ row.FECHA + ' <br>'; 
+	}
+      ).on
+      ('error',function(err) { 
+	console.log('Resultor: ' + inspect(err)); 
+      }).on
+      ('end',function(info) { 
+	console.log('Resultished successfully');
+	socket.emit('rmasig', {'todo':cadenita});
+      });
+    });
     client.end();
   });
 });

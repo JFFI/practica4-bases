@@ -7,22 +7,56 @@ block content
   div
     h1 Agregar Bus
     form(id = "abus")
-      input(name="abusbus",value = "No.Bus")
-      select(name = "abustipo")
+      input(id="abusbus",value = "No.Bus")
+      select(id = "abustipo")
         option(value = 1) Economico
         option(value = 2) Empresarial
+      br
       input(type="submit",value = "Agregar")
     h1 Borrar Bus
     form(id="bbus")
-      input(name="bbusbus",value = "No.Bus")
+      input(id="bbusbus",value = "No.Bus")
+      br
       input(type="submit",value = "Borrar")
     h1 Cambiar Bus
     form(id="cbus")
-      input(name="cbusbus",value = "No.Bus")
-      select(name = "cbustipo")
+      input(id="cbusbus",value = "No.Bus")
+      select(id = "cbustipo")
         option(value = 1) Economico
         option(value = 2) Empresarial
+      br
       input(type="submit",value = "Cambiar")
+  div
+    h1 Agregar Ruta
+    form(id = "aruta")
+      input(id="arutaruta",value = "No.Ruta")
+      input(id="arutanombre",value = "Nombre")
+      br
+      input(type="submit",value = "Agregar")
+    h1 Borrar Ruta
+    form(id="bruta")
+      input(id="brutaruta",value = "No.Ruta")
+      br
+      input(type="submit",value = "Borrar")
+    h1 Agregar Puntos
+    form(id="cruta")
+      input(id="crutaruta",value = "No.Bus")
+      input(id="crutapunto",value = "No.punto")
+      input(id="crutadist",value = "distancia")
+      br
+      input(type="submit",value = "Agregar")
+  div
+    h1 Asignar Bus
+    form(id = "aasig")
+      input(id = "aasigbus",value = "No.Bus")
+      input(id = "aasigruta",value = "No.Ruta")
+      br
+      input(type = "submit",value = "Asignar")
 block sidebar
   .widget
     h1 Admin
+    form(id="mbus")
+      input(type = "submit",value = "Mostrar Buses")
+    form(id="mruta")
+      input(type = "submit",value = "Mostrar Rutas")
+    div(id="node-id")

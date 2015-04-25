@@ -6,7 +6,7 @@ block encabezado
 block content
   form(action="/user",method = "POST",id="myForm")
     h1 Login
-    input(value="dpi",name = "dpi")
+    input(value="dpi",name = "user[dpi]")
     input(type="submit",value = "Login")
 block sidebar
   .widget
