@@ -3,12 +3,16 @@
  * Module dependencies.
  */
 
-var express = require('express')
-  , routes = require('./routes');
+var express = require('express');
 
 var app = module.exports = express.createServer()
   , http = require('http')
   , io = require('socket.io').listen(app);
+
+  var inspect = require('util').inspect;
+  var Client = require('mariasql');
+
+  
 
 // Configuration
 
@@ -33,13 +37,16 @@ app.configure('production', function(){
 // Routes
 
 app.get('/', function(req, res){
-  res.render('index', { title: 'Procesos' })
+  res.render('index', { title: 'Login' })
+});
+app.get('/admin', function(req,res){
+  res.render('admin',{title:'Admin'});
+});
+app.get('/user', function(req,res){
+  res.render('user',{title:'Usuario'});
 });
 app.get('/proc', function(req,res){
-  res.render('proc',{title:'CPU'});
-});
-app.get('/mem', function(req,res){
-  res.render('mem',{title:'Memoria'});
+  res.render('proc',{title:'P'});
 });
 
 app.listen(3000, function(){
@@ -49,9 +56,52 @@ app.listen(3000, function(){
 
 io.on('connection', function(socket){
   socket.on('kill', function(data){
-    console.log('asesinando: ' + data['pid']);
-    require('shelljs/global');
-    exec('kill '+data['pid']); 
+    /*console.log('asesinando: ' + data['pid']);
+     *    require('shelljs/global');
+     *    exec('kill '+data['pid']);*/
+    var client = new Client();
+    client.connect
+    (
+      {
+	host: '127.0.0.1'
+	,user: 'root'
+	,password: 'julio123'
+      }
+    );
+    client.on('connect', function() { console.log('Clientnected'); } 
+    ).on(
+      'error', function(err) { console.log('Clientor: ' + err); }
+    ).on
+    (
+      'close', function(hadError) { console.log('Clientsed'); }
+    );
+    
+    client.query('SHOW DATABASES').on
+    (
+      'result', 
+     function(result) 
+     {
+       result.on
+       (
+	 'row', 
+	function(row) { console.log('Result: ' + inspect(row)); }
+       ).on
+       (
+	 'error', 
+	function(err) { console.log('Resultor: ' + inspect(err)); }
+       ).on
+       (
+	 'end', 
+	function(info) { console.log('Resultished successfully'); }
+       );
+     }
+    ).on
+    (
+      'end', 
+     function() { console.log('Doneh all results'); }
+    );
+    
+    client.end();
   });
 });
 
@@ -148,3 +198,4 @@ io.emit('cpulog',{'uso':cpulog});
 io.emit('listapr',{'lista':listaproc,'totproc':totproc,'rproc':rproc,'sproc':sproc,'zproc':zproc,'dproc':dproc});
 
 },1500);
+
