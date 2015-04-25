@@ -494,7 +494,7 @@ io.on('connection', function(socket){
     });
     client.end();
   });
-  /*socket.on('sres',function(data){
+  socket.on('sres',function(data){
     var client = new Client();
     client.connect({
       host: '127.0.0.1'
@@ -502,12 +502,12 @@ io.on('connection', function(socket){
       ,password: 'julio123'
       ,db: 'julio'
     });
-    client.query('SELECT * FROM RESERVACION R, (SELECT P.DISTANCIA XO.NOMBRE FROM PARTE P,RESERVACION RO, PUNTO XO WHERE P.RUTA = RO.RUTA AND RO.RESERVACION = '+data['res']+' AND XO.PUNTO = P.PUNTO AND P.DISTANCIA >= RO.ORIGEN AND P.DISTANCIA <= RO.DESTINO) A,() B WHERE CLIENTE = '+data['cliente']).on
+    client.query('SELECT * FROM PARTE P, (SELECT C.RUTA AS CC, A.PUNTO AS A,B.PUNTO AS B,A.DISTANCIA AS AA,B.DISTANCIA AS BB FROM PARTE A, PARTE B, (SELECT * FROM RESERVACION WHERE RESERVACION = '+data['res']+') C WHERE A.PUNTO = C.ORIGEN AND B.PUNTO = C.DESTINO AND A.RUTA = C.RUTA AND B.RUTA = C.RUTA) X WHERE P.DISTANCIA >= X.AA AND P.DISTANCIA <= X.BB AND X.CC = P.RUTA').on
     ('result',function(result){
-      var cadenita = "<tr><th>RESERVACION</th><th>RUTA</th><th>CLIENTE</th><th>FECHA</th><th>PAGADA</th><th>TOTAL</th></tr>";
+      var cadenita = "<tr><th>PUNTO</th><th>RUTA</th><th>DISTANCIA</th></tr>";
       result.on(
 	'row',function(row){
-	  cadenita = cadenita +'<tr><td>'+ row.RESERVACION + '</td><td>' + row.RUTA + '</td><td>'+ row.CLIENTE + '</td><td>'+row.FECHA + '</td><td>'+row.PAGADA + '</td><td>'+row.TOTAL + '</td></tr>'; 
+	  cadenita = cadenita +'<tr><td>'+ row.PUNTO + '</td><td>' + row.RUTA + '</td><td>'+ row.DISTANCIA + '</td></tr>'; 
 	 
 	}
       ).on
@@ -521,4 +521,4 @@ io.on('connection', function(socket){
     });
     client.end();
   });
-});*/
+});
