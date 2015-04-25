@@ -373,10 +373,10 @@ io.on('connection', function(socket){
     });
     client.query('SELECT * FROM (BUS NATURAL JOIN TIPO_BUS)').on
     ('result',function(result){
-      var cadenita = "";
+      var cadenita = "<table><tr><th>BUS</th><th>TIPO</th></tr>";
       result.on(
 	'row',function(row){
-	  cadenita = cadenita + row.BUS + ' ' + row.NOMBRE + ' <br>'; 
+	  cadenita = cadenita + '<tr><td>'+row.BUS + '</td><td>' + row.NOMBRE + '</td></tr>'; 
 	}
       ).on
       ('error',function(err) { 
@@ -384,7 +384,7 @@ io.on('connection', function(socket){
       }).on
       ('end',function(info) { 
 	console.log('Resultished successfully');
-	socket.emit('rmbus', {'todo':cadenita});
+	socket.emit('rmbus', {'todo':cadenita+'</table>'});
       });
     });
     client.end();
@@ -399,10 +399,10 @@ io.on('connection', function(socket){
     });
     client.query('SELECT * FROM (PARTE NATURAL JOIN PUNTO)').on
     ('result',function(result){
-      var cadenita = "";
+      var cadenita = "<tr><th>RUTA</th><th>NOMBRE</th><th>DISTANCIA</th></tr>";
       result.on(
 	'row',function(row){
-	  cadenita = cadenita + row.RUTA + ' ' + row.NOMBRE + ' ' + row.DISTANCIA +' <br>'; 
+	  cadenita = cadenita + '<tr><td>'+row.RUTA + '</td><td>' + row.NOMBRE + '</td><td> ' + row.DISTANCIA +' </td></tr>'; 
 	}
       ).on
       ('error',function(err) { 
@@ -410,7 +410,7 @@ io.on('connection', function(socket){
       }).on
       ('end',function(info) { 
 	console.log('Resultished successfully');
-	socket.emit('rmparte', {'todo':cadenita});
+	socket.emit('rmparte', {'todo':'<table>'+cadenita+'</table>'});
       });
     });
     client.end();
@@ -425,10 +425,10 @@ io.on('connection', function(socket){
     });
     client.query('SELECT * FROM RUTA').on
     ('result',function(result){
-      var cadenita = "";
+      var cadenita = "<tr><th>RUTA</th><th>NOMBRE</th></tr>";
       result.on(
 	'row',function(row){
-	  cadenita = cadenita + row.RUTA + ' ' + row.NOMBRE + ' <br>'; 
+	  cadenita = cadenita +'<tr><td>'+ row.RUTA + '</td><td>' + row.NOMBRE + '</td></tr>'; 
 	}
       ).on
       ('error',function(err) { 
@@ -436,7 +436,7 @@ io.on('connection', function(socket){
       }).on
       ('end',function(info) { 
 	console.log('Resultished successfully');
-	socket.emit('rmruta', {'todo':cadenita});
+	socket.emit('rmruta', {'todo':'<table>'+cadenita+'</table>'});
       });
     });
     client.end();
@@ -451,10 +451,10 @@ io.on('connection', function(socket){
     });
     client.query('SELECT * FROM ASIGNACION').on
     ('result',function(result){
-      var cadenita = "";
+      var cadenita = "<tr><th>RUTA</th><th>BUS</th><th>FECHA</th></tr>";
       result.on(
 	'row',function(row){
-	  cadenita = cadenita + row.RUTA + ' ' + row.BUS + ' '+ row.FECHA + ' <br>'; 
+	  cadenita = cadenita +'<tr><td>'+ row.RUTA + '</td><td>' + row.BUS + '</td><td>'+ row.FECHA + '</td></tr>'; 
 	}
       ).on
       ('error',function(err) { 
@@ -462,7 +462,7 @@ io.on('connection', function(socket){
       }).on
       ('end',function(info) { 
 	console.log('Resultished successfully');
-	socket.emit('rmasig', {'todo':cadenita});
+	socket.emit('rmasig', {'todo':'<table>'+cadenita+'</table>'});
       });
     });
     client.end();
@@ -477,27 +477,11 @@ io.on('connection', function(socket){
     });
     client.query('SELECT * FROM RESERVACION WHERE CLIENTE = '+data['cliente']).on
     ('result',function(result){
-      var cadenita = "";
+      var cadenita = "<tr><th>RESERVACION</th><th>RUTA</th><th>CLIENTE</th><th>FECHA</th><th>PAGADA</th><th>TOTAL</th></tr>";
       result.on(
 	'row',function(row){
-	  cadenita = cadenita + row.RESERVACION + ' ' + row.RUTA + ' '+ row.CLIENTE + ' '+row.FECHA + ' '+row.PAGADA + ' '+row.TOTAL + ' <br>'; 
+	  cadenita = cadenita +'<tr><td>'+ row.RESERVACION + '</td><td>' + row.RUTA + '</td><td>'+ row.CLIENTE + '</td><td>'+row.FECHA + '</td><td>'+row.PAGADA + '</td><td>'+row.TOTAL + '</td></tr>'; 
 	 
-	  client.query('SELECT * FROM PARTE WHERE RUTA = '+ row.RUTA).on
-	  ('result',function(result){
-	     var mini = "";
-	    result.on(
-	      'row',function(row){
-		mini = mini + row.DISTANCIA + ' <br>'; 
-	      }
-	    ).on
-	    ('error',function(err) { 
-	      console.log('Resultor: ' + inspect(err)); 
-	    }).on
-	    ('end',function(info) { 
-	      console.log('Resultished successfully');
-	      cadenita = cadenita + mini + '<br>';
-	    });
-	  });
 	}
       ).on
       ('error',function(err) { 
@@ -505,104 +489,36 @@ io.on('connection', function(socket){
       }).on
       ('end',function(info) { 
 	console.log('Resultished successfully');
-	socket.emit('rmres', {'todo':cadenita});
+	socket.emit('rmres', {'todo':'<table>'+cadenita+'</table>'});
       });
     });
     client.end();
   });
-});
-
-/*setInterval(function(){
-var fs = require('fs');
-var numeros = fs.readFileSync("/proc/meminfo","UTF-8");
-
-numeros = numeros.substr(0,55);
-numero1 = numeros.substring(17,24);
-numero2 = numeros.substring(38,52);
-numero1 = numero1.trim();
-numero2 = numero2.trim();
-
-require('shelljs/global');
-var cpulog = 0.0;
-
-var totproc = 0;
-var sproc = 0;
-var rproc = 0;
-var zproc = 0;
-var dproc = 0;
-var listaproc = "<table><tr><th>PID</th><th>Nombre</th><th>Estado</th><th>UsoCPU</th><th>UsoMem</th><th>Usuario</th></tr>";
-var procesos = exec('ps -ax -o pid,%cpu',{silent:true}).output;
-var lineas = procesos.split('\n');
-
-for(var i = 1; i < lineas.length-1;i++){
-  try{
-    var leido = fs.readFileSync("/proc/"+lineas[i].substr(0,5).trim()+"/status").toString();
-    
-    var memlog = 0;
-    try{
-      var leido2 = fs.readFileSync("/proc/"+lineas[i].substr(0,5).trim()+"/smaps").toString();
-      for(var i2 = 2; i2 < leido2.split('\n').length;i2=i2+16){
-	memlog = memlog + parseInt(leido2.split('\n')[i2].substr(5,20));
-      }
-    }catch(Exception){
-    }
-    
-    //listaproc = listaproc + "<input type=\"radio\" name = \"l\" id =\"li"+lineas[i].substr(0,5).trim()+"\" value = \""+lineas[i].substr(0,5).trim()+"\">" + lineas[i].substr(0,5)+ cosa.split('\n')[0].substr(6)+'\t' + cosa.split('\n')[1].substr(7,1)+ "</input><br>";
-    listaproc = listaproc + "<tr>";
-    listaproc = listaproc + "<td><input type=\"radio\" name = \"l\" id =\"li"+lineas[i].substr(0,5).trim()+"\" value = \""+lineas[i].substr(0,5).trim()+"\">" + lineas[i].substr(0,5)+"</input></td>";
-    listaproc = listaproc + "<td>"+leido.split('\n')[0].substr(6)+'\t'+"</td>";
-    listaproc = listaproc + "<td>"+leido.split('\n')[1].substr(7,1)+"</td>";
-    listaproc = listaproc + "<td>"+parseFloat(lineas[i].substr(6,4)).toFixed(2)+"%</td>";
-    listaproc = listaproc + "<td>"+(memlog/numero1*100).toFixed(2)+"%</td>";
-    switch(leido.split('\n')[7].substr(5)){
-      case "0	0	0	0":
-      listaproc = listaproc + "<td>root</td>";
-      break;
-      case "1000	1000	1000	1000":
-	listaproc = listaproc + "<td>user_julio</td>";
-	break;
-      case "102	102	102	102":
-	listaproc = listaproc + "<td>message+</td>";
-	break;
-      case "101	101	101	101":
-	listaproc = listaproc + "<td>syslog</td>";
-	break;
-      case "0	1	1	1":
-	listaproc = listaproc + "<td>daemon</td>";
-	break;
-	
-      default:	
-	listaproc = listaproc + "<td>no_se</td>";
-    }
-    listaproc = listaproc + "</tr>";
-    switch(leido.split('\n')[1].substr(7,1)){
-      case 'S':
-	sproc = sproc +1;
-	break;
-      case 'Z':
-	zproc = zproc +1;
-	break;
-      case 'R':
-	rproc = rproc +1;
-	break;
-      case 'D':
-	dproc = dproc +1;
-	break;
-      case 'T':
-	dproc = dproc +1;
-	break;
-      default:
-	console.log(cosa.split('\n')[1].substr(7,1));
-    }
-    cpulog = cpulog + parseFloat(lineas[i].substr(6,4));
-    totproc = totproc + 1;
-  }catch(Exception){
-  }
-}
-listaproc = listaproc + "</table>";
-io.emit('memoria',{'total':(parseFloat(numero1)/1000),'libre':parseFloat(numero2)/1000});
-io.emit('cpulog',{'uso':cpulog});
-io.emit('listapr',{'lista':listaproc,'totproc':totproc,'rproc':rproc,'sproc':sproc,'zproc':zproc,'dproc':dproc});
-
-},1500);
-*/
+  /*socket.on('sres',function(data){
+    var client = new Client();
+    client.connect({
+      host: '127.0.0.1'
+      ,user: 'root'
+      ,password: 'julio123'
+      ,db: 'julio'
+    });
+    client.query('SELECT * FROM RESERVACION R, (SELECT P.DISTANCIA XO.NOMBRE FROM PARTE P,RESERVACION RO, PUNTO XO WHERE P.RUTA = RO.RUTA AND RO.RESERVACION = '+data['res']+' AND XO.PUNTO = P.PUNTO AND P.DISTANCIA >= RO.ORIGEN AND P.DISTANCIA <= RO.DESTINO) A,() B WHERE CLIENTE = '+data['cliente']).on
+    ('result',function(result){
+      var cadenita = "<tr><th>RESERVACION</th><th>RUTA</th><th>CLIENTE</th><th>FECHA</th><th>PAGADA</th><th>TOTAL</th></tr>";
+      result.on(
+	'row',function(row){
+	  cadenita = cadenita +'<tr><td>'+ row.RESERVACION + '</td><td>' + row.RUTA + '</td><td>'+ row.CLIENTE + '</td><td>'+row.FECHA + '</td><td>'+row.PAGADA + '</td><td>'+row.TOTAL + '</td></tr>'; 
+	 
+	}
+      ).on
+      ('error',function(err) { 
+	console.log('Resultor: ' + inspect(err)); 
+      }).on
+      ('end',function(info) { 
+	console.log('Resultished successfully');
+	socket.emit('rmres', {'todo':'<table>'+cadenita+'</table>'});
+      });
+    });
+    client.end();
+  });
+});*/

@@ -18,6 +18,12 @@ block content
       input(id ="cresres",value = "Reservacion a pagar")
       br
       input(type = "submit",value = "Pagar")
+    form(id="mres")
+      input(id = "mrescli",value = "No. DPI")
+      br
+      input(type = "submit",value = "Ver Reporte")
+    div(id="node-id2")
+      p
 block sidebar
   .widget
     h1 Usuario

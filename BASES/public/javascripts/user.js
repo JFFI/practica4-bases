@@ -21,12 +21,20 @@ $(function () {
 	socket.emit('mres',{'cliente':'\''+$('#mrescli').val()+'\''});
 	return false;
       });
+      $('#sres').submit(function(){
+	socket.emit('sres',{'res':$('#sresres').val()});
+	return false;
+      });
       socket.on('rmparte',function(data){
 	var node = document.getElementById('node-id');
         node.innerHTML = data['todo'];
       });
       socket.on('rmres',function(data){
-	var node = document.getElementById('node-id');
+	var node = document.getElementById('node-id2');
+        node.innerHTML = data['todo'];
+      });
+      socket.on('rsres',function(data){
+	var node = document.getElementById('node-id3');
         node.innerHTML = data['todo'];
       });
     });
